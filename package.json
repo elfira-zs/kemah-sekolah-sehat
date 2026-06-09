@@ -1,0 +1,22 @@
+{
+  "name": "kemah-sekolah-sehat-aksi-edukasi",
+  "version": "1.0.0",
+  "description": "Website Edukasi Proyek Aksi Kemah Sekolah Sehat Direktorat SMK",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "kemah",
+    "sekolah-sehat",
+    "edukasi",
+    "smk"
+  ],
+  "author": "Direktorat SMK / PMR Aksi Sehat",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}

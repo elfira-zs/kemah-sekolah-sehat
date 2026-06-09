@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Website Edukasi Kemah Sekolah Sehat Direktorat SMK - Mengenal Masa Remaja, Kesehatan Reproduksi, dan Pergaulan Sehat.">
+  <title>Aksi Sehat - Kemah Sekolah Sehat Direktorat SMK</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Confetti Canvas for celebration -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div style="display: flex; align-items: center; gap: 1.25rem;">
+      <div class="header-logos" style="display: flex; align-items: center; gap: 0.6rem; border-right: 2px solid var(--border-red); padding-right: 1.25rem;">
+        <img src="logo-pmi.png" alt="Logo PMI" style="height: 36px; width: auto; object-fit: contain;" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/e/e0/Palang_Merah_Indonesia.svg';">
+        <img src="logo-tunas.png" alt="Logo Tunas Kelapa" style="height: 36px; width: auto; object-fit: contain;" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/2/22/Logo_Tunas_Kelapa.svg';">
+        <img src="logo-kemendikbud.png" alt="Logo Kemendikbud" style="height: 36px; width: auto; object-fit: contain;" onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/d/d3/Logo_Kementerian_Pendidikan_dan_Kebudayaan.svg';">
+      </div>
+      <a href="#" class="nav-brand" id="logo-nav" style="gap: 0.5rem;">
+        <div class="nav-logo" style="width: 32px; height: 32px; font-size: 1rem;">🇮🇩</div>
+        <div class="brand-text">
+          <span class="brand-title">Aksi Sehat</span>
+          <span class="brand-subtitle">Kemah Sekolah Sehat - Direktorat SMK</span>
+        </div>
+      </a>
+    </div>
+    
+    <div class="nav-actions">
+      <!-- Active Student Info (hidden initially) -->
+      <div class="user-info" id="nav-user-info" style="display: none;">
+        <span class="user-name" id="nav-student-name">Siswa Aktif</span>
+        <span class="user-class" id="nav-student-class">Kelas</span>
+      </div>
+      
+      <!-- Logout Button (hidden initially) -->
+      <button class="btn btn-secondary" id="logout-btn" style="display: none;">
+        Keluar
+      </button>
+
+      <!-- Admin Panel Login Trigger -->
+      <button class="btn btn-primary" id="admin-login-nav-btn">
+        🔐 Admin Panel
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Application Wrapper -->
+  <div class="container">
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- 1. LOGIN SECTION -->
+    <section id="login-section" class="app-section active">
+      <div class="login-wrapper">
+        <div class="login-header">
+          <h2>Mulai Aksi Sehatmu!</h2>
+          <p>Pelatihan Kemah Sekolah Sehat Direktorat SMK. Silakan masukkan identitasmu untuk mulai belajar dan mengerjakan kuis.</p>
+        </div>
+        
+        <form id="student-login-form" onsubmit="event.preventDefault();">
+          <div class="form-group">
+            <label for="student-name">Nama Lengkap</label>
+            <input type="text" id="student-name" class="form-input" placeholder="Masukkan nama lengkapmu..." required>
+          </div>
+          <div class="form-group">
+            <label for="student-class">Kelas</label>
+            <input type="text" id="student-class" class="form-input" placeholder="Contoh: XI RPL 1, X Tata Boga..." required>
+          </div>
+          
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.8rem;" id="start-learning-btn">
+            Mulai Belajar &amp; Kuis 🚀
+          </button>
+        </form>
+
+        <div class="login-divider">atau</div>
+        
+        <div style="text-align: center;">
+          <button class="btn btn-secondary" style="width: 100%;" id="admin-shortcut-btn">
+            Masuk sebagai Admin PMR 🏫
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. LEARNING SECTION (Materi & Progress) -->
+    <section id="learning-section" class="app-section">
+      <div class="learning-layout">
+        
+        <!-- Left: Content Area -->
+        <div class="learning-content">
+          <!-- Dynamic Material Card -->
+          <div class="material-card" id="material-content-wrapper">
+            <!-- Content will be injected dynamically from app.js -->
+          </div>
+
+          <!-- Bottom Material Nav -->
+          <div class="material-footer-nav">
+            
+            
+          </div>
+        </div>
+
+        <!-- Right: Progress Card -->
+        <aside class="progress-card">
+          <div class="progress-header">
+            <h3>Progress Belajar</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">
+              Selesaikan kuis di setiap halaman untuk melaju ke halaman berikutnya.
+            </p>
+          </div>
+
+          <!-- Progress Bar Display -->
+          <div class="progress-container-bar">
+            <div class="progress-bar-fill" id="progress-bar-indicator">0%</div>
+          </div>
+
+          <ul class="step-nav-list" id="sidebar-steps-list">
+            <!-- Steps will be injected dynamically -->
+          </ul>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- 3. QUIZ MODAL/SECTION -->
+    <section id="quiz-section" class="app-section">
+      <div class="quiz-section">
+        <div class="quiz-title">
+          <div class="material-badge" id="quiz-page-badge">Kuis Halaman 1</div>
+          <h3 id="quiz-title-text">Evaluasi Pemahaman Materi</h3>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+            Jawab 5 pertanyaan di bawah ini dengan memilih salah satu pilihan jawaban.
+          </p>
+        </div>
+
+        <!-- Dynamic Questions List -->
+        <div id="quiz-questions-wrapper">
+          <!-- Inject questions here -->
+        </div>
+
+        <div class="quiz-submit-container">
+          <button class="btn btn-primary" style="padding: 0.8rem 2.5rem;" id="submit-quiz-btn">
+            Kirim Jawaban Kuis 📝
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. FINISH PAGE -->
+    <section id="finish-section" class="app-section">
+      <div class="finish-card">
+        <div class="trophy-icon">🏆</div>
+        <h2>Luar Biasa, Kamu Berhasil!</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+          Kamu telah menyelesaikan seluruh materi dan kuis dalam **Aksi Sosialisasi Kemah Sekolah Sehat Direktorat SMK**.
+        </p>
+
+        <div class="result-total-score" id="total-score-display">0 / 25</div>
+        <p style="font-weight: 700; color: var(--dark-red);" id="total-score-rating">Sangat Baik!</p>
+
+        <div class="scores-breakdown">
+          <p style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem;">Detail Skor per Halaman:</p>
+          <div class="scores-grid" id="scores-breakdown-grid">
+            <!-- Scores breakdown injection -->
+          </div>
+        </div>
+
+        <div class="token-copy-box" id="token-display-box" style="display: none;">
+          <span class="token-label">Kode Hasil Pengisian (Token):</span>
+          <span class="token-text" id="token-string">TOKEN-XYZ</span>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+            *Salin kode di atas dan berikan ke Admin/Guru sebagai bukti pengisian jika website ini menggunakan mode luring (offline/statis).
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap;">
+          <button class="btn btn-primary" id="finish-submit-online-btn">
+            Kirim Hasil Akhir ke Server 📤
+          </button>
+          <button class="btn btn-secondary" id="restart-learning-btn">
+            Ulangi Belajar &amp; Kuis 🔄
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. ADMIN PANEL SECTION -->
+    <section id="admin-section" class="app-section">
+      <div class="admin-grid">
+        <!-- Stat Card 1 -->
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-info">
+            <span class="stat-val" id="stat-total-students">0</span>
+            <span class="stat-label">Siswa Terdaftar</span>
+          </div>
+        </div>
+        <!-- Stat Card 2 -->
+        <div class="stat-card">
+          <div class="stat-icon">📈</div>
+          <div class="stat-info">
+            <span class="stat-val" id="stat-average-score">0.0</span>
+            <span class="stat-label">Rata-rata Skor</span>
+          </div>
+        </div>
+        <!-- Stat Card 3 -->
+        <div class="stat-card">
+          <div class="stat-icon">✨</div>
+          <div class="stat-info">
+            <span class="stat-val" id="stat-storage-mode">Lokal</span>
+            <span class="stat-label">Mode Penyimpanan</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-card">
+        <div class="dashboard-header">
+          <div>
+            <h2>Rekap Hasil Pengisian Siswa</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">
+              Daftar siswa yang telah berpartisipasi dalam Aksi Edukasi Kemah Sekolah Sehat.
+            </p>
+          </div>
+
+          <div class="dashboard-actions">
+            <!-- Search field -->
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input type="text" id="admin-search-input" class="search-input" placeholder="Cari Nama / Kelas...">
+            </div>
+            
+            <button class="btn btn-secondary" id="admin-import-token-btn">
+              📥 Impor Token
+            </button>
+            <button class="btn btn-primary" id="admin-export-csv-btn">
+              📊 Ekspor CSV
+            </button>
+            <button class="btn btn-danger" id="admin-reset-btn">
+              ⚠️ Reset Data
+            </button>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Siswa</th>
+                <th>Kelas</th>
+                <th>Waktu Mulai</th>
+                <th>Waktu Selesai</th>
+                <th>Detail Skor</th>
+                <th>Total Skor</th>
+              </tr>
+            </thead>
+            <tbody id="admin-submissions-tbody">
+              <!-- Submissions rows injection -->
+              <tr class="empty-table">
+                <td colspan="7" style="text-align: center;">Belum ada data pengerjaan siswa.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- MODALS -->
+  <!-- 1. Admin PIN Modal -->
+  <div class="modal-overlay" id="admin-pin-modal">
+    <div class="modal-card">
+      <h3 class="modal-title">🔐 Masuk Admin Panel</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+        Masukkan PIN Administrator khusus PMR untuk melihat dashboard rekap pengisian siswa.
+      </p>
+      
+      <form id="admin-pin-form" onsubmit="event.preventDefault();">
+        <div class="form-group">
+          <label for="admin-pin-input">PIN Admin</label>
+          <input type="password" id="admin-pin-input" class="form-input" placeholder="Masukkan PIN admin..." required autofocus>
+        </div>
+        
+        <div class="modal-buttons">
+          <button type="button" class="btn btn-secondary" id="close-admin-pin-modal-btn">Batal</button>
+          <button type="submit" class="btn btn-primary" id="submit-admin-pin-btn">Verifikasi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Import Token Modal -->
+  <div class="modal-overlay" id="import-token-modal">
+    <div class="modal-card">
+      <h3 class="modal-title">📥 Impor Token Hasil Siswa</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.2rem;">
+        Jika dihosting secara statis, masukkan token kode hasil yang diberikan siswa untuk memasukkannya ke rekapitulasi data.
+      </p>
+      
+      <form id="import-token-form" onsubmit="event.preventDefault();">
+        <div class="form-group">
+          <label for="token-input-textarea">Token Kode</label>
+          <textarea id="token-input-textarea" class="form-input" style="height: 100px; font-family: monospace; font-size: 0.8rem; resize: none;" placeholder="Tempel token di sini..." required></textarea>
+        </div>
+        
+        <div class="modal-buttons">
+          <button type="button" class="btn btn-secondary" id="close-import-token-modal-btn">Batal</button>
+          <button type="submit" class="btn btn-primary" id="submit-import-token-btn">Impor Data</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer Credit -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Kemah Sekolah Sehat - Proyek Aksi Edukasi Remaja Sehat. Diselenggarakan oleh Direktorat SMK.</p>
+      <p style="font-size: 0.7rem; color: var(--text-light); margin-top: 0.25rem;">Made with 🇲🇨 for Indonesian Vocational Schools (SMK)</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="materials.js"></script>
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
